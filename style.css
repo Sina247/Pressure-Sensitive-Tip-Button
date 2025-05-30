@@ -1,0 +1,286 @@
+:root {
+  --ru: 15;
+}
+
+*,
+*::before,
+*::after {
+  transform-style: preserve-3d;
+}
+
+[data-flipped="true"] .arrow {
+  opacity: 0;
+}
+
+.arrow {
+  display: inline-block;
+  opacity: 0.8;
+  position: fixed;
+  font-size: 0.875rem;
+  font-family: "Gloria Hallelujah", cursive;
+  transition: opacity 0.26s 0.26s ease-out;
+}
+
+.arrow--instruction {
+  top: 50%;
+  left: 50%;
+  translate: -190% 150%;
+  rotate: -10deg;
+}
+
+.arrow--instruction svg {
+  color: hsl(0 0% 65%);
+  scale: 1 1;
+  top: 130%;
+  rotate: 20deg;
+  left: -10%;
+  width: 80%;
+  translate: 105% 40%;
+  position: absolute;
+}
+
+main {
+  scale: 1.2;
+  transform: translate3d(0, 0, 100vmax);
+}
+
+[aria-label] {
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  --bg: #1871f4;
+  background: var(--bg);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  color: #fff;
+  font-family: inherit;
+  border: 1px solid color-mix(in oklch, var(--bg), #000 12%);
+  cursor: pointer;
+  transform-origin: 75% 50%;
+  transition: transform 0.26s, box-shadow 0.26s;
+  padding: 0;
+  --shadow-color: 0 0% 0%;
+  box-shadow: 0px 0.6px 0.7px hsl(var(--shadow-color) / 0.14), 0px 2.3px 2.6px -0.8px hsl(var(--shadow-color) / 0.14), 0px 5.9px 6.6px -1.7px hsl(var(--shadow-color) / 0.14), 0px 14.5px 16.3px -2.5px hsl(var(--shadow-color) / 0.14);
+}
+
+[data-tipping="false"]:active {
+  transform: rotate(calc(var(--ru) * -1deg));
+  box-shadow: -0.5px 0.7px 1px hsl(var(--shadow-color) / 0.14), -1.8px 2.3px 3.3px -0.8px hsl(var(--shadow-color) / 0.14), -4.6px 6px 8.5px -1.7px hsl(var(--shadow-color) / 0.14), -11.4px 14.6px 20.8px -2.5px hsl(var(--shadow-color) / 0.14);
+}
+
+[aria-label]:is(:focus-visible, :hover) {
+  --bg: color-mix(in oklch, #1871f4, #000 5%);
+}
+
+[aria-label]:is(:focus-visible, :hover) .purse {
+  rotate: y 360deg;
+  transition: rotate 0.26s 0.12s ease-out;
+}
+
+.content {
+  align-items: center;
+  clip-path: inset(-100vmax 0 1px 0);
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  height: 100%;
+}
+
+.purse {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.scene {
+  --thickness: 4;
+  display: inline-block;
+  width: 1.2lh;
+  aspect-ratio: 1;
+  position: relative;
+  perspective: 100vh;
+  transform-style: preserve-3d;
+}
+
+.hole {
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  scale: 0;
+  transform-style: preserve-3d;
+  transform: translate3d(0, 0, calc(var(--thickness) * -2px));
+  transform-origin: 50% 70%;
+}
+
+.hole::before {
+  content: "";
+  position: absolute;
+  width: 125%;
+  height: 40%;
+  border-radius: 50%;
+  top: 70%;
+  left: 50%;
+  translate: -50% -50%;
+  background: black;
+  box-shadow: 0 2px hsl(0 0% 20%) inset;
+}
+
+.hole::after {
+  content: "";
+  position: absolute;
+  background: var(--bg);
+  height: 200%;
+  top: 0;
+  left: 50%;
+  translate: -50% 25%;
+  width: 121%;
+  transform: translate3d(0, 0, calc(var(--thickness) * 5px));
+  mask: radial-gradient(125% 32% at 50% 3%, rgba(0, 0, 0, 0) 50%, #fff 50%);
+}
+
+.coin {
+  --depth: 2;
+  --detail: hsl(43 97% 46%);
+  --face: #ffdc02;
+  --side: #f4ae00;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  transform-style: preserve-3d;
+}
+
+.coin__core {
+  height: 100%;
+  width: calc(var(--depth) * 2px);
+  background: var(--side);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  transform: rotateY(90deg) rotateX(calc((90 - var(--rx, 0)) * -1deg));
+  transform-style: preserve-3d;
+}
+
+.coin__core--rotated {
+  --base: 90;
+  transform: rotateY(90deg) rotateX(calc((90 - var(--rx, 0)) * 1deg));
+}
+
+.coin__core::after,
+.coin__core::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--side);
+  transform-style: preserve-3d;
+}
+
+.coin__core::after {
+  transform: rotateX(calc((var(--base, 0)-var(--rx, 0)) * 1deg));
+}
+
+.coin__core::before {
+  transform: rotateX(calc((var(--base, 0)-var(--rx, 0)) * -1deg));
+}
+
+.coin__face {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--face);
+  display: grid;
+  place-items: center;
+  color: var(--detail);
+  transform-style: preserve-3d;
+}
+
+.coin__face svg {
+  width: 65%;
+  scale: -1 1;
+  translate: -5% 0;
+}
+
+.coin__face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--side);
+  backface-visibility: hidden;
+}
+
+.coin__face--front {
+  transform: translate3d(0, 0, calc(var(--depth) * 1px + 0.5px)) rotateY(180deg);
+}
+
+.coin__face--rear {
+  transform: translate3d(0, 0, calc(var(--depth) * -1px - 0.5px));
+}
+
+html {
+  color-scheme: light dark;
+}
+
+body {
+  background: light-dark(#fff, #000);
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Inter, sans-serif;
+  overflow: hidden;
+}
+
+body::before {
+  --size: 45px;
+  --line: color-mix(in hsl, canvasText, transparent 80%);
+  content: "";
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(90deg, var(--line) 1px, transparent 1px var(--size)) calc(var(--size) * 0.36) 50% / var(--size) var(--size), linear-gradient(var(--line) 1px, transparent 1px var(--size)) 0% calc(var(--size) * 0.32) / var(--size) var(--size);
+  mask: linear-gradient(-20deg, transparent 50%, white);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.bear-link {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  width: 48px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  opacity: 0.8;
+  color: canvasText;
+}
+
+.bear-link:hover {
+  opacity: 1;
+}
+
+.bear-link svg {
+  width: 75%;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fa" data-theme="light">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href="style.css" />
+		<title>Pressure Sensitive Tip Button</title>
+		<link rel="stylesheet" href="https://unpkg.com/normalize.css" />
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" />
+	</head>
+	
+	<body>
+		<span class="arrow arrow--instruction">
+			<span>hold to flip coin</span>
+			<svg viewBox="0 0 97 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<path fill-rule="evenodd" clip-rule="evenodd" d="M74.568 0.553803C74.0753 0.881909...Z" fill="currentColor" />
+			</svg>
+		</span>
+
+		<main>
+			<button aria-label="Leave a tip" data-tipping="false">
+				<span class="content">
+					<span class="scene">
+						<span class="hole"></span>
+						<div class="purse">
+							<div class="coin">
+								<div class="coin__face coin__face--front">
+									<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+										<title>Webflow</title>
+										<path d="m24 4.515-7.658 14.97H9.149l3.205-6.204h-.144C9.566 16.713 5.621 18.973 0 19.485v-6.118s3.596-.213 5.71-2.435H0V4.515h6.417v5.278l.144-.001 2.622-5.277h4.854v5.244h.144l2.72-5.244H24Z" fill="currentColor" />
+									</svg>
+								</div>
+								<div class="coin__core"></div>
+								<div class="coin__core coin__core--rotated"></div>
+								<div class="coin__face coin__face--rear">
+									<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+										<title>Webflow</title>
+										<path d="m24 4.515-7.658 14.97H9.149l3.205-6.204h-.144C9.566 16.713 5.621 18.973 0 19.485v-6.118s3.596-.213 5.71-2.435H0V4.515h6.417v5.278l.144-.001 2.622-5.277h4.854v5.244h.144l2.72-5.244H24Z" fill="currentColor" />
+									</svg>
+								</div>
+							</div>
+						</div>
+					</span>
+					<span>Leave tip</span>
+				</span>
+			</button>
+		</main>
+
+		<a class="bear-link" href="https://twitter.com/intent/follow?screen_name=jh3yy" target="_blank" rel="noreferrer noopener">
+			<svg viewBox="0 0 969 955" fill="none" xmlns="http://www.w3.org/2000/svg"></svg>
+		</a>
+
+		<script type="module">
+			import gsap from "https://cdn.skypack.dev/gsap@3.13.0";
+			import { Physics2DPlugin } from "https://cdn.skypack.dev/gsap@3.13.0/Physics2DPlugin";
+			import { Pane } from "https://cdn.skypack.dev/tweakpane@4.0.4";
+			gsap.registerPlugin(Physics2DPlugin);
+
+			const button = document.querySelector('[aria-label="Leave a tip"]');
+			const coin = button.querySelector(".coin");
+			const tipSound = new Audio("https://myinstants.com/media/sounds/coin_1.mp3");
+			tipSound.volume = 0.3;
+
+			const config = {
+				theme: "light",
+				muted: true,
+				timeScale: 1.1,
+				distance: { lower: 100, upper: 350 },
+				bounce: { lower: 2, upper: 12 },
+				velocity: { lower: 300, upper: 700 },
+				rotation: { lower: 0, upper: 15 },
+				flipSpeed: { lower: 0.25, upper: 0.6 },
+				spins: { lower: 1, upper: 6 },
+				rotate: { lower: 0, upper: 90 },
+				power: "",
+			};
+
+			function tip() {
+				if (button.dataset.tipping === "true") return;
+				const currentRotation = gsap.getProperty(button, "rotate");
+				if (currentRotation < 0) document.documentElement.dataset.flipped = "true";
+				button.dataset.tipping = "true";
+				const duration = gsap.utils.mapRange(config.rotation.lower, config.rotation.upper, 0, config.flipSpeed.upper)(Math.abs(currentRotation));
+				const distance = gsap.utils.snap(1, gsap.utils.mapRange(config.rotation.lower, config.rotation.upper, config.distance.lower, config.distance.upper)(Math.abs(currentRotation)));
+				const velocity = gsap.utils.mapRange(config.rotation.lower, config.rotation.upper, config.velocity.lower, config.velocity.upper)(Math.abs(currentRotation));
+				const bounce = gsap.utils.mapRange(config.velocity.lower, config.velocity.upper, config.bounce.lower, config.bounce.upper)(Math.abs(velocity));
+				const distanceDuration = gsap.utils.mapRange(config.distance.lower, config.distance.upper, config.flipSpeed.lower, config.flipSpeed.upper)(distance);
+				const spin = gsap.utils.snap(1, gsap.utils.mapRange(config.distance.lower, config.distance.upper, config.spins.lower, config.spins.upper)(distance));
+				const offRotate = gsap.utils.random(config.rotate.lower, config.rotate.upper, 1) * -1;
+				const hangtime = Math.max(1, duration * 4);
+
+				const tl = gsap
+					.timeline({
+						onComplete() {
+							if (!config.muted) tipSound.play();
+							gsap.set(coin, { yPercent: 100 });
+							gsap
+								.timeline({
+									onComplete() {
+										gsap.set(button, { clearProps: "all" });
+										gsap.set(coin, { clearProps: "all" });
+										gsap.set(".purse", { clearProps: "all" });
+										button.dataset.tipping = "false";
+									},
+								})
+								.to(button, { yPercent: bounce, repeat: 1, duration: 0.12, yoyo: true })
+								.fromTo(".hole", { scale: 1 }, { scale: 0, duration: 0.2, delay: 0.2 })
+								.set(coin, { clearProps: "all" })
+								.set(coin, { yPercent: -50 })
+								.fromTo(".purse", { xPercent: -200 }, { delay: 0.5, xPercent: 0, duration: 0.5, ease: "power1.out" })
+								.fromTo(coin, { rotate: -460 }, { rotate: 0, duration: 0.5, ease: "power1.out" }, "<")
+								.timeScale(config.timeScale);
+						},
+					})
+					.set(button, { transition: "none" })
+					.fromTo(button, { rotate: currentRotation }, { rotate: 0, duration, duration, ease: "elastic.out(1.75,0.75)" })
+					.to(
+						coin,
+						{
+							duration: hangtime,
+							physics2D: { velocity, angle: -90, gravity: 1000 },
+							onUpdate() {
+								if (gsap.getProperty(coin, "y") >= coin.offsetHeight) {
+									tl.progress(1);
+								}
+							},
+						},
+						`>-${duration * 0.825}`
+					)
+					.fromTo(coin, { rotateX: 0 }, { rotateX: spin * -360, duration: distanceDuration * 2 }, "<")
+					.to(coin, { rotateY: offRotate, duration: distanceDuration }, "<")
+					.to(coin, { "--rx": offRotate, duration: distanceDuration }, "<")
+					.fromTo(".hole", { scale: 0 }, { scale: 1, duration: 0.2 }, hangtime * 0.35)
+					.timeScale(config.timeScale);
+			}
+			button.addEventListener("click", tip);
+
+			const ctrl = new Pane({ title: "config", expanded: true });
+			function update() {
+				document.documentElement.dataset.theme = config.theme;
+			}
+			function sync(e) {
+				if (!document.startViewTransition || e.target.controller.view.labelElement.innerText !== "theme") return update();
+				document.startViewTransition(update);
+			}
+			ctrl.addBinding(config, "timeScale", { label: "timescale", min: 0.1, max: 2, step: 0.1 });
+			ctrl.addBinding(config, "muted", { label: "muted" });
+			ctrl.addBinding(config, "power", { label: "power", disabled: true });
+			ctrl.addBinding(config, "theme", { label: "theme", options: { System: "system", Light: "light", Dark: "dark" } });
+			ctrl.on("change", sync);
+			update();
+		</script>
+	</body>
+</html>
