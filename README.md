@@ -9,4 +9,4 @@ A micro-interaction demo recreating Webflow’s “hold to flip coin” tipping 
 - 🪙 **Physics-based coin throw** : Uses GSAP’s Physics2DPlugin for realistic trajectory, gravity, and collision effects.  
 - ⚙️ **Dynamic settings** : Tweakpane GUI enables real-time control of all parameters.
 - 📱 **Mobile & desktop** : Touch-friendly “press and hold” behavior with fallback to click.  
-- 🌐 **Pure HTML/CSS/JS** : No build tools required—ES modules via Skypack CDN. 
+- 🌐 **Pure HTML/CSS/JS** : No build tools required ES modules via Skypack CDN. 
