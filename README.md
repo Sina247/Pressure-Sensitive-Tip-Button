@@ -1,4 +1,4 @@
-# 🎯 Pressure Sensitive Tip Button
+# 🖲️ Pressure Sensitive Tip Button
 
 A micro-interaction recreating “hold to flip coin” tipping button, powered by GSAP Physics2D and Tweakpane. Users press “Leave Tip” and feel responsive, physics based feedback as the coin flips, tumbles, and lands with configurable bounce, spin and velocity.
 
